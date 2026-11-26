@@ -4,65 +4,81 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap">
 <style>
-/* 版面：單欄閱讀；先給三層架構圖，再講 skill 會問什麼、範例、規則、怎麼開始 */
+/* 版面：單欄；兩條路 → 三層架構 → 範例 → 九題（可點選）→ 自動產出結構與許願句 → 規則 → 裝 skill */
 :root{
   --bg:#ffffff; --panel:#f1ede1; --ink:#15271e; --text:#111; --muted:#555; --line:#d9d2bd;
-  --gold:#cba24e; --green:#1f7a44; --card:#ffffff;
+  --gold:#cba24e; --green:#1f7a44; --card:#ffffff; --on:#15271e; --on-text:#f1ede1; --warn:#b4432f;
   --f-display:"Noto Serif TC","Songti TC",serif;
   --f-body:"Noto Sans TC","PingFang TC",system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0f1c15; --panel:#18291f; --ink:#f1ede1; --text:#ece8dc; --muted:#a9b3a8; --line:#2c4234;
-  --gold:#e7cd8a; --green:#4fb87a; --card:#0f1c15; color-scheme:dark}}
+  --gold:#e7cd8a; --green:#4fb87a; --card:#0f1c15; --on:#e7cd8a; --on-text:#15271e; --warn:#e78a72; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0f1c15; --panel:#18291f; --ink:#f1ede1; --text:#ece8dc; --muted:#a9b3a8; --line:#2c4234;
-  --gold:#e7cd8a; --green:#4fb87a; --card:#0f1c15; color-scheme:dark}
+  --gold:#e7cd8a; --green:#4fb87a; --card:#0f1c15; --on:#e7cd8a; --on-text:#15271e; --warn:#e78a72; color-scheme:dark}
 body{background:var(--bg);color:var(--text);font-family:var(--f-body);font-size:15.5px;line-height:1.7;margin:0}
 .wrap{max-width:860px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{font-family:var(--f-display);color:var(--ink);text-wrap:balance;line-height:1.3;margin:0}
-h1{font-size:30px} h2{font-size:21px;margin-bottom:10px} h3{font-size:16px;font-family:var(--f-body);font-weight:700}
+h1{font-size:30px} h2{font-size:21px} h3{font-size:16px;font-family:var(--f-body);font-weight:700}
 p{margin:0}
+a{color:var(--green)}
 .eyebrow{font-size:12px;letter-spacing:.14em;color:var(--gold);font-weight:700}
 .lead{color:var(--muted);max-width:62ch}
+.note{font-size:13.5px;color:var(--muted)}
 header{display:grid;gap:10px;padding-bottom:22px;border-bottom:2px solid var(--gold)}
 section{margin-top:40px;display:grid;gap:14px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.two>div{background:var(--panel);border-radius:10px;padding:16px;display:grid;gap:6px;align-content:start}
+.two>div{background:var(--panel);border-radius:10px;padding:16px;display:grid;gap:8px;align-content:start}
 .two .num{font-family:var(--f-display);font-size:26px;color:var(--gold);line-height:1}
-/* 三層架構 */
+.btn{font:inherit;font-size:13.5px;border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer;justify-self:start;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+/* 三層 */
 .layers{display:grid;grid-template-columns:1fr auto 1fr auto 1.25fr;gap:10px;align-items:stretch}
 .layer{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:8px;align-content:start;background:var(--card);min-width:0}
 .layer .tag{font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--green)}
 .layer ul{margin:0;padding-left:18px;font-size:14px;color:var(--muted)}
 .arrow{align-self:center;color:var(--gold);font-size:22px}
-.show-inner{display:grid;gap:6px}
 .front{background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 10px;font-size:13.5px}
 .front b{display:block;font-size:12px;letter-spacing:.08em;opacity:.8}
 .drawers{display:flex;gap:6px;flex-wrap:wrap}
 .drawers span{font-size:12.5px;border:1px dashed var(--line);border-radius:6px;padding:4px 8px;color:var(--muted)}
-.note{font-size:13.5px;color:var(--muted)}
 @media (max-width:640px){.layers{grid-template-columns:1fr}.arrow{transform:rotate(90deg);justify-self:center}.two{grid-template-columns:1fr}}
-/* 問題 */
-.steps{display:grid;gap:18px}
-.stepblock{border-left:3px solid var(--gold);padding-left:16px;display:grid;gap:10px}
-.qs{display:grid;gap:8px}
-.qrow{display:grid;grid-template-columns:28px 1fr;gap:8px}
-.qrow .n{font-family:var(--f-display);color:var(--gold);font-weight:700}
-.qrow p{font-size:14px;color:var(--muted)}
-.qrow p.q{color:var(--text);font-weight:500;font-size:15px}
-/* 範例表 */
-.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
-table{border-collapse:collapse;width:100%;min-width:640px;font-size:13.5px}
-th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
-th{background:var(--panel);color:var(--ink);font-weight:700;white-space:nowrap}
-tr:last-child td{border-bottom:none}
-td:first-child{font-weight:700;color:var(--ink);white-space:nowrap}
+/* 範例卡 */
+.examples{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.ex{background:var(--panel);border-radius:10px;padding:14px;display:grid;gap:6px;align-content:start}
+.ex .meta{font-size:12.5px;color:var(--muted)}
+/* 九題 */
+.stepblock{border-left:3px solid var(--gold);padding-left:16px;display:grid;gap:18px}
+.q{display:grid;gap:8px}
+.qhead{display:grid;grid-template-columns:26px 1fr;gap:6px}
+.qhead .n{font-family:var(--f-display);color:var(--gold);font-weight:700;font-size:17px}
+.qhead .why{font-size:13.5px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding-left:32px}
+.chip{font:inherit;font-size:14px;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer;text-align:left}
+.chip small{display:block;font-size:12px;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--on);color:var(--on-text);border-color:var(--on)}
+.chip[aria-pressed="true"] small{color:var(--on-text);opacity:.8}
+.indent{padding-left:32px}
+input[type=text],select{font:inherit;font-size:14px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);min-width:0}
+.pages{display:grid;gap:8px}
+.pagerow{display:grid;grid-template-columns:28px 1fr 150px;gap:8px;align-items:center}
+.pagerow .n{font-size:13px;color:var(--gold);font-weight:700}
+@media (max-width:520px){.chips,.indent{padding-left:0}.pagerow{grid-template-columns:24px 1fr}.pagerow select{grid-column:2}}
+/* 產出 */
+.out{background:var(--panel);border-radius:12px;padding:18px;display:grid;gap:14px}
+.tree{font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.6;white-space:pre;overflow-x:auto;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;color:var(--text)}
+.wish{white-space:pre-wrap;font-size:14px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;min-width:0}
+.warns{display:grid;gap:6px}
+.warns p{font-size:13.5px;color:var(--warn)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.copied{font-size:13px;color:var(--green)}
 /* 規則 */
 .rules{display:grid;gap:12px;counter-reset:r}
 .rule{display:grid;grid-template-columns:34px 1fr;gap:10px}
 .rule::before{counter-increment:r;content:counter(r);font-family:var(--f-display);font-size:20px;color:var(--gold);line-height:1.3}
 .rule p{color:var(--muted);font-size:14px}
-.start{background:var(--panel);border-radius:12px;padding:18px;display:grid;gap:10px}
 .say{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;overflow-wrap:anywhere}
 </style>
 </head><body>
@@ -71,14 +87,14 @@ td:first-child{font-weight:700;color:var(--ink);white-space:nowrap}
 <header>
   <span class="eyebrow">羅伯特 AI 學院・儀表板</span>
   <h1>儀表板整體架構</h1>
-  <p class="lead">做儀表板最難的不是程式，是講清楚你要什麼。這頁先讓你看懂一個儀表板是怎麼組成的；看懂了，再用 skill 跟 Claude 一題一題確認你要的東西。</p>
+  <p class="lead">做儀表板最難的不是程式，是講清楚你要什麼。這頁先讓你看懂一個儀表板是怎麼組成的，再用兩種方式之一，把你要的東西講清楚。</p>
 </header>
 
 <section>
-  <h2>兩個步驟</h2>
+  <h2>兩種方式，選一個</h2>
   <div class="two">
-    <div><span class="num">1</span><h3>先看懂架構（這一頁）</h3><p class="note">知道儀表板有哪三層、Claude 會問你什麼、為什麼這樣問。</p></div>
-    <div><span class="num">2</span><h3>再用 skill 確認你要的</h3><p class="note">跟 Claude 說「我想做一個儀表板」，它一次問你一題，陪你把結構架起來，最後產出你的規格與許願句。</p></div>
+    <div><span class="num">A</span><h3>在這頁直接點選</h3><p class="note">往下看完架構，在「九個問題」點一點，最下面會產出結構圖和許願句。按「複製許願句」，貼給 Claude 就能開工。</p><a class="btn" href="#questions">跳到九個問題</a></div>
+    <div><span class="num">B</span><h3>用 skill 一題一題聊</h3><p class="note">裝好 skill 後跟 Claude 說「我想做一個儀表板」，它一次問你一題、附建議答案，陪你把結構架起來。</p><a class="btn" href="https://github.com/Robbiechiu/dashboard-wish" target="_blank" rel="noopener">skill 在這裡（GitHub）</a></div>
   </div>
 </section>
 
@@ -94,53 +110,51 @@ td:first-child{font-weight:700;color:var(--ink);white-space:nowrap}
       <p class="note">所有來源統一成<b>一份</b>資料。儀表板只讀它、不改它；要改資料，回原本的地方改。</p></div>
     <span class="arrow" aria-hidden="true">→</span>
     <div class="layer"><span class="tag">第三層</span><h3>顯示</h3>
-      <div class="show-inner">
-        <div class="front"><b>主儀表板（門面）</b>打開第一眼：最多 3 樣「看完要動手」的東西</div>
-        <div class="drawers"><span>分頁：依主題</span><span>分頁：依人</span><span>分頁：依時間</span><span>分頁：明細</span></div>
-      </div>
+      <div class="front"><b>主儀表板（門面）</b>打開第一眼：最多 3 樣「看完要動手」的東西</div>
+      <div class="drawers"><span>分頁：依主題</span><span>分頁：依人</span><span>分頁：依時間</span><span>分頁：明細</span></div>
       <p class="note">再決定放哪裡：只在自己電腦，或放上網路（要登入）。</p></div>
   </div>
 </section>
 
 <section>
-  <h2>skill 會問你這 9 題</h2>
-  <p class="lead">一次只問一題，每題都會附建議答案。先看過，心裡有個底。</p>
-  <div class="steps">
-    <div class="stepblock"><span class="eyebrow">第 1 步・說需求</span>
-      <div class="qs">
-        <div class="qrow"><span class="n">1</span><div><p class="q">你想用它來做什麼？</p><p>追數字、追進度、看外部資訊、管一群人、給別人看。用途決定後面每一題的建議答案。</p></div></div>
-        <div class="qrow"><span class="n">2</span><div><p class="q">資料從哪裡來？</p><p>不知道就說「我現在記在哪裡」。Claude 會自己打開檔案看，不用你描述欄位。</p></div></div>
-        <div class="qrow"><span class="n">3</span><div><p class="q">要多新？</p><p>你多久做一次決定，就多久更新一次。即時不一定比較好。</p></div></div>
-        <div class="qrow"><span class="n">4</span><div><p class="q">想看到什麼樣子？</p><p>大數字、曲線圖（看趨勢）、長條圖（比大小）、表格、紅綠燈、卡片牆。</p></div></div>
-        <div class="qrow"><span class="n">5</span><div><p class="q">誰看、在哪裡看？</p><p>只有自己用電腦看、手機也要看，還是給團隊或客戶看。後兩種就要放上網路並加登入。</p></div></div>
-      </div></div>
-    <div class="stepblock"><span class="eyebrow">第 2 步・看結構</span>
-      <p class="note">Claude 依你的答案畫出三層結構圖，並指出矛盾。例如你選了「即時」，但資料是手打的，資料本身不會即時進來。</p></div>
-    <div class="stepblock"><span class="eyebrow">第 3 步・定細節</span>
-      <div class="qs">
-        <div class="qrow"><span class="n">6</span><div><p class="q">主儀表板放什麼？最多 3 個</p><p>今天要處理的事、最重要的 3 個數字、異常警示、趨勢圖、最後更新時間。</p></div></div>
-        <div class="qrow"><span class="n">7</span><div><p class="q">要不要分頁？</p><p>東西不多就一頁；多的話主頁＋2～4 個分頁。</p></div></div>
-        <div class="qrow"><span class="n">8</span><div><p class="q">每一頁叫什麼、用什麼切？</p><p>每頁要跟別頁切法不同才值得分開；切法一樣的就合併。</p></div></div>
-        <div class="qrow"><span class="n">9</span><div><p class="q">看完這個儀表板，你要做什麼決定？</p><p>最重要的一題。答不出來，這個儀表板很可能只會變成擺設。</p></div></div>
-      </div></div>
+  <h2>範例：老師自己在用的六個儀表板</h2>
+  <p class="lead">每張都拆成三層來看。看到像你要的，按「照這個起手」，下面九個問題會自動幫你勾好，你再改。</p>
+  <div class="examples" id="examples"></div>
+</section>
+
+<section id="questions">
+  <h2>九個問題</h2>
+  <p class="lead">這九題就是 skill 會問你的。在這裡直接點選，結果會即時出現在下面。</p>
+  <div class="stepblock"><span class="eyebrow">第 1 步・說需求</span>
+    <div class="q"><div class="qhead"><span class="n">1</span><div><h3>你想用它來做什麼？（選一個）</h3><p class="why">用途決定後面每一題該怎麼選。</p></div></div><div class="chips" data-q="purpose" data-single></div></div>
+    <div class="q"><div class="qhead"><span class="n">2</span><div><h3>資料從哪裡來？（可複選）</h3><p class="why">不知道就選「你現在記在哪裡」。</p></div></div><div class="chips" data-q="sources"></div></div>
+    <div class="q"><div class="qhead"><span class="n">3</span><div><h3>要多新？（選一個）</h3><p class="why">你多久做一次決定，就多久更新一次。即時不一定比較好。</p></div></div><div class="chips" data-q="refresh" data-single></div></div>
+    <div class="q"><div class="qhead"><span class="n">4</span><div><h3>想看到什麼樣子？（可複選）</h3><p class="why">看趨勢用曲線、比大小用長條、要動手用紅綠燈。</p></div></div><div class="chips" data-q="views"></div></div>
+    <div class="q"><div class="qhead"><span class="n">5</span><div><h3>誰看、在哪裡看？（選一個）</h3><p class="why">手機要看或給別人看，就要放上網路並加登入。</p></div></div><div class="chips" data-q="audience" data-single></div></div>
   </div>
-  <p class="note">問完，Claude 會把答案存成 <b>我的儀表板規格.md</b>，附上一段許願句。你確認「對」之後，它才開始做：先用範例資料做畫面給你看，你點頭了才接真資料。</p>
+  <div class="stepblock"><span class="eyebrow">第 2 步・看結構</span>
+    <p class="note">不用點。依你的答案，最下面會自動畫出三層結構圖，有矛盾也會提醒你。</p></div>
+  <div class="stepblock"><span class="eyebrow">第 3 步・定細節</span>
+    <div class="q"><div class="qhead"><span class="n">6</span><div><h3>主儀表板要放什麼？（最多 3 個）</h3><p class="why">主頁只放「看完要動手」的東西，細節收進分頁。</p></div></div><div class="chips" data-q="main" data-max="3"></div></div>
+    <div class="q"><div class="qhead"><span class="n">7</span><div><h3>要不要分頁？</h3><p class="why">東西不多就一頁；多的話主頁＋2～4 個分頁。</p></div></div><div class="chips" data-q="paging" data-single></div></div>
+    <div class="q" id="pageBox" style="display:none"><div class="qhead"><span class="n">8</span><div><h3>每一頁叫什麼？用什麼切？</h3><p class="why">每頁要跟別頁切法不同才值得分開。名稱留空的那頁不算。</p></div></div><div class="pages indent" id="pages"></div></div>
+    <div class="q"><div class="qhead"><span class="n">9</span><div><h3>看完這個儀表板，你要做什麼決定？</h3><p class="why">最重要的一題。答不出來，這個儀表板很可能只會變成擺設。</p></div></div>
+      <div class="indent"><input type="text" id="decision" placeholder="例：決定今天先打電話給哪三位客戶" style="width:100%;box-sizing:border-box"></div></div>
+  </div>
 </section>
 
 <section>
-  <h2>範例：老師自己在用的六個儀表板</h2>
-  <p class="lead">同樣拆成三層來看。跟 skill 說「我要的跟○○很像」，它就會拿那個範例當建議答案。</p>
-  <div class="tablewrap"><table>
-    <thead><tr><th>範例</th><th>用途</th><th>資料進來</th><th>多久更新</th><th>顯示成什麼樣</th><th>誰看</th></tr></thead>
-    <tbody>
-      <tr><td>工作總覽</td><td>還沒做完的事，按事務排好</td><td>電腦裡的記憶檔、專案文件</td><td>每 30 分鐘</td><td>卡片牆＋待接續清單</td><td>自己，只放本機</td></tr>
-      <tr><td>股票儀表板</td><td>持股、損益、目標價</td><td>網路股價＋手打的買賣紀錄</td><td>打開就抓最新價</td><td>表格，點開看走勢圖</td><td>自己，電腦＋手機</td></tr>
-      <tr><td>學員減重儀表板</td><td>每位學員的體重、體脂、飲食</td><td>LINE 收照片＋體脂秤 App 截圖</td><td>排程每 5 分鐘</td><td>曲線圖＋升降紅綠</td><td>顧問團隊</td></tr>
-      <tr><td>每日新聞</td><td>AI 與總經新聞整理</td><td>網站公開新聞</td><td>每天早上 9 點</td><td>卡片牆</td><td>自己</td></tr>
-      <tr><td>投資資訊整合</td><td>投資資訊集中一處</td><td>網站資料＋自己的筆記</td><td>每天到每週</td><td>六個分頁，表格為主</td><td>自己</td></tr>
-      <tr><td>募資資料櫃</td><td>給投資人看的文件與數字</td><td>計劃書、簡報等檔案</td><td>想到才更新</td><td>四個分頁</td><td>對外，要密碼</td></tr>
-    </tbody>
-  </table></div>
+  <h2>你的儀表板結構</h2>
+  <div class="out">
+    <div class="warns" id="warns"></div>
+    <div><h3 style="margin-bottom:6px">結構圖</h3><div class="tree" id="tree"></div></div>
+    <div><h3 style="margin-bottom:6px">許願句（整段複製貼給 Claude）</h3><div class="wish" id="wish"></div></div>
+    <div class="row">
+      <button class="btn primary" id="copy">複製許願句</button>
+      <button class="btn" id="reset">全部重來</button>
+      <span class="copied" id="copied"></span>
+    </div>
+  </div>
 </section>
 
 <section>
@@ -158,14 +172,184 @@ td:first-child{font-weight:700;color:var(--ink);white-space:nowrap}
 </section>
 
 <section>
-  <h2>怎麼開始</h2>
-  <div class="start">
-    <h3>① 安裝 skill（跟 Claude 說這句）</h3>
-    <div class="say">幫我安裝這個 skill：https://github.com/Robbiechiu/dashboard-wish ，裝到 ~/.claude/skills/dashboard-wish</div>
+  <h2>想一題一題聊：裝 skill</h2>
+  <div class="out">
+    <h3>① 跟 Claude 說這句（按鈕複製）</h3>
+    <div class="say" id="install">幫我安裝這個 skill：https://github.com/Robbiechiu/dashboard-wish ，裝到 ~/.claude/skills/dashboard-wish</div>
+    <div class="row"><button class="btn primary" id="copyInstall">複製安裝句</button><span class="copied" id="copiedInstall"></span></div>
     <h3>② 重開 Claude Code，跟它說</h3>
     <div class="say">我想做一個儀表板</div>
-    <p class="note">做到一半要停也沒關係，下次說「接續我的儀表板」就能繼續。</p>
+    <p class="note">已經在這頁點完了？把許願句直接貼給它，它會從確認結構開始。做到一半要停也沒關係，下次說「接續我的儀表板」就能繼續。</p>
   </div>
 </section>
 </div>
+
+<script>
+const OPTS={
+  purpose:[["track","追蹤數字變化","業績、體重、股價、庫存"],["todo","掌握進度待辦","專案進度、還沒做完的事"],["watch","監看外部資訊","新聞、價格、競爭對手"],["list","管理一群人","客戶、學員、會員名單"],["show","展示給別人看","給客戶、投資人、夥伴"]],
+  sources:[["hand","我自己手打",""],["sheet","Excel / Google 試算表",""],["line","LINE 對話或照片",""],["shot","App 截圖",""],["web","網站或公開資料",""],["files","電腦資料夾裡的檔案",""],["db","既有的系統或資料庫",""]],
+  refresh:[["live","即時","打開就是最新"],["day","每天固定時間","例：每天早上 9 點"],["week","每週一次",""],["manual","我想到才更新","按一下按鈕"]],
+  views:[["kpi","大數字卡","一眼看到總數"],["line","曲線圖","看趨勢、看變化"],["bar","長條圖","比大小、比排名"],["table","表格清單","可以排序篩選"],["alert","紅綠燈提醒","哪裡出問題"],["cards","卡片牆","一張一件事"]],
+  audience:[["me","只有我，在電腦看",""],["mobile","只有我，手機也要看",""],["team","給團隊／客戶看","要登入"]],
+  main:[["todo","今天要處理的事",""],["top3","最重要的 3 個數字",""],["alert","異常警示",""],["trend","整體趨勢圖",""],["fresh","最後更新時間",""]],
+  paging:[["one","一頁就夠","東西不多"],["multi","主頁＋分頁","2～4 頁"]]
+};
+const L=(q,v)=>(OPTS[q].find(o=>o[0]===v)||[,""])[1];
+
+const EXAMPLES=[
+  {name:"工作總覽",what:"所有還沒做完的事，按事務群組排好",src:"電腦裡的記憶檔、專案文件",ref:"每 30 分鐘自動更新",look:"卡片牆＋待接續清單",who:"只有自己，只放本機",
+   pick:{purpose:["todo"],sources:["files"],refresh:["live"],views:["cards","alert"],audience:["me"],main:["todo","fresh"],paging:["one"]}},
+  {name:"股票儀表板",what:"持股、損益、目標價、賣股試算",src:"網路股價＋自己手打的買賣紀錄",ref:"打開就抓最新價；大股東持股每週一次",look:"表格為主，點開看走勢圖",who:"自己，電腦＋手機唯讀版",
+   pick:{purpose:["track"],sources:["web","hand"],refresh:["live"],views:["table","line","kpi"],audience:["mobile"],main:["top3","alert"],paging:["multi"]}},
+  {name:"學員減重儀表板",what:"每位學員的體重、體脂、飲食紀錄",src:"LINE 小幫手收照片＋體脂秤 App 截圖",ref:"排程每 5 分鐘處理一次",look:"曲線圖＋升降紅綠＋通話提醒表",who:"顧問團隊",
+   pick:{purpose:["list"],sources:["line","shot"],refresh:["live"],views:["line","alert","table"],audience:["team"],main:["alert","todo"],paging:["multi"]}},
+  {name:"每日新聞儀表板",what:"AI 與總經新聞整理",src:"網站公開新聞",ref:"每天早上 9 點",look:"卡片牆",who:"只有自己",
+   pick:{purpose:["watch"],sources:["web"],refresh:["day"],views:["cards"],audience:["me"],main:["trend"],paging:["one"]}},
+  {name:"投資資訊整合",what:"投資資訊集中一處",src:"網站資料＋自己的筆記",ref:"依來源不同，每天到每週",look:"六個分頁，表格為主",who:"自己",
+   pick:{purpose:["watch"],sources:["web","files"],refresh:["day"],views:["table","bar"],audience:["mobile"],main:["top3","fresh"],paging:["multi"]}},
+  {name:"募資資料櫃",what:"給投資人看的文件與數字",src:"計劃書、簡報等檔案",ref:"想到才更新",look:"四個分頁：文件庫、儀表板、人脈、市場",who:"對外，要密碼",
+   pick:{purpose:["show"],sources:["files"],refresh:["manual"],views:["kpi","cards"],audience:["team"],main:["top3"],paging:["multi"]}}
+];
+
+const state={purpose:[],sources:[],refresh:[],views:[],audience:[],main:[],paging:[]};
+const pageCuts=[["topic","依主題切"],["person","依人／對象切"],["time","依時間切"],["detail","某一項的明細"]];
+const $=id=>document.getElementById(id);
+
+function renderChips(){
+  document.querySelectorAll(".chips").forEach(box=>{
+    const q=box.dataset.q;box.innerHTML="";
+    OPTS[q].forEach(([v,t,s])=>{
+      const b=document.createElement("button");b.type="button";b.className="chip";b.id=`c-${q}-${v}`;
+      b.innerHTML=t+(s?`<small>${s}</small>`:"");
+      b.setAttribute("aria-pressed",state[q].includes(v));
+      b.onclick=()=>{
+        const single=box.hasAttribute("data-single"),max=+box.dataset.max||99,arr=state[q];
+        if(single){state[q]=arr[0]===v?[]:[v];}
+        else if(arr.includes(v)){arr.splice(arr.indexOf(v),1);}
+        else{if(arr.length>=max)arr.shift();arr.push(v);}
+        renderChips();update();
+      };
+      box.appendChild(b);
+    });
+  });
+}
+function renderPages(){
+  const box=$("pages");box.innerHTML="";
+  for(let i=0;i<4;i++){
+    const row=document.createElement("div");row.className="pagerow";
+    row.innerHTML=`<span class="n">P${i+1}</span>
+      <input type="text" id="pn${i}" placeholder="${i===0?"主儀表板":"例："+["","客戶明細","每月趨勢","設定"][i]}" value="${i===0?"主儀表板":""}">
+      <select id="pc${i}">${i===0?'<option value="main">門面（第一眼）</option>':pageCuts.map(([v,t])=>`<option value="${v}">${t}</option>`).join("")}</select>`;
+    box.appendChild(row);
+  }
+  box.querySelectorAll("input,select").forEach(el=>el.addEventListener("input",update));
+}
+function pickExample(ex){
+  Object.keys(state).forEach(k=>state[k]=[...(ex.pick[k]||[])]);
+  renderChips();update();
+  $("questions").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function renderExamples(){
+  EXAMPLES.forEach(ex=>{
+    const d=document.createElement("div");d.className="ex";
+    d.innerHTML=`<h3>${ex.name}</h3><p style="font-size:14px">${ex.what}</p>
+      <p class="meta">資料進來：${ex.src}<br>多久更新：${ex.ref}<br>顯示成：${ex.look}<br>誰看：${ex.who}</p>`;
+    const b=document.createElement("button");b.className="btn";b.textContent="照這個起手";b.onclick=()=>pickExample(ex);
+    d.appendChild(b);$("examples").appendChild(d);
+  });
+}
+function pagesList(){
+  if(state.paging[0]!=="multi")return [];
+  const out=[];
+  for(let i=0;i<4;i++){
+    const n=$("pn"+i).value.trim(),c=$("pc"+i).value;
+    if(n)out.push({n,c:i===0?"門面":(pageCuts.find(p=>p[0]===c)||[,""])[1]});
+  }
+  return out;
+}
+// 資料怎麼進來、放哪裡：用固定規則推，不靠猜
+function pipeline(){
+  const s=state.sources,r=state.refresh[0],steps=[];
+  if(s.includes("line"))steps.push("LINE 官方帳號／小幫手收訊息與照片");
+  if(s.includes("shot"))steps.push("AI 讀截圖、抽出數字");
+  if(s.includes("web"))steps.push(r==="live"?"打開頁面時即時抓網站資料":"排程自動抓網站資料");
+  if(s.includes("sheet"))steps.push("讀 Excel／Google 試算表（不改原檔）");
+  if(s.includes("files"))steps.push("讀電腦資料夾裡的檔案");
+  if(s.includes("db"))steps.push("從既有系統讀資料（只讀）");
+  if(s.includes("hand"))steps.push("頁面上留輸入欄讓我手打");
+  return steps;
+}
+function hosting(){
+  return {team:"放上網路＋登入（只有被邀請的人看得到）",mobile:"放上網路，手機可看＋登入",me:"只放自己電腦（本機）"}[state.audience[0]]||"";
+}
+function refreshText(){
+  return {live:"即時（打開就是最新／排程每幾分鐘跑）",day:"每天固定時間自動更新",week:"每週自動更新一次",manual:"按按鈕手動更新"}[state.refresh[0]]||"";
+}
+function update(){
+  $("pageBox").style.display=state.paging[0]==="multi"?"":"none";
+  const decision=$("decision").value.trim(),pages=pagesList(),warns=[],missing=[];
+  [["purpose","①用途"],["sources","②資料來源"],["refresh","③更新頻率"],["views","④樣子"],["audience","⑤誰看"],["main","⑥主儀表板"],["paging","⑦分頁"]]
+    .forEach(([k,t])=>{if(!state[k].length)missing.push(t)});
+  if(!decision)missing.push("⑨要做什麼決定");
+  if(missing.length)warns.push("還沒選："+missing.join("、"));
+  if(state.refresh[0]==="live"&&state.sources.length&&state.sources.every(x=>x==="hand"||x==="shot"))
+    warns.push("你選了「即時」，但資料是手打／截圖——資料本身不會即時進來，選「我想到才更新」或「每天」就夠了。");
+  if(state.views.length>=5)warns.push("樣子選了 5 種以上，一頁會很擠。建議主頁挑 2 種，其他放分頁。");
+  if(state.audience[0]==="me"&&state.purpose[0]==="show")warns.push("用途是「展示給別人看」，但⑤選了只有自己看——兩個要對齊。");
+  if(state.paging[0]==="multi"&&pages.length<2)warns.push("選了分頁，但⑧只填了 "+pages.length+" 頁名稱。至少要 2 頁才算分頁。");
+  if(state.sources.some(x=>["line","shot","db"].includes(x))&&state.audience.length&&state.audience[0]!=="me")
+    warns.push("資料可能含個資（LINE、截圖、系統資料），放上網路一定要加登入。");
+  $("warns").innerHTML=warns.map(w=>`<p>⚠ ${w}</p>`).join("");
+
+  const steps=pipeline(),views=state.views.map(v=>L("views",v)),main=state.main.map(v=>L("main",v));
+  let t=`【用途】${L("purpose",state.purpose[0])||"（未選）"}\n【要做的決定】${decision||"（未填）"}\n\n資料進來\n`;
+  (steps.length?steps:["（未選資料來源）"]).forEach((s,i,a)=>t+=`${i===a.length-1?"└─":"├─"} ${s}\n`);
+  t+=`   ↓ 更新：${refreshText()||"（未選）"}\n整理\n└─ 統一成一份資料（唯一真實來源），儀表板只讀不改\n   ↓\n顯示  ${hosting()||"（未選誰看）"}\n`;
+  if(state.paging[0]==="multi"&&pages.length){
+    pages.forEach((p,i)=>{
+      const last=i===pages.length-1;
+      t+=`${last?"└─":"├─"} ${p.n}（${p.c}）\n`;
+      if(i===0)main.forEach(m=>t+=`${last?"   ":"│  "}  · ${m}\n`);
+    });
+    t+=`   圖表樣式：${views.join("、")||"（未選）"}\n`;
+  }else{
+    t+=`└─ 單頁儀表板\n`;
+    main.forEach(m=>t+=`     · 最上面：${m}\n`);
+    t+=`     · 下面：${views.join("、")||"（未選）"}\n`;
+  }
+  $("tree").textContent=t;
+
+  let w="我想做一個儀表板。\n\n";
+  w+=`【目的】我要用它來「${L("purpose",state.purpose[0])||"＿＿"}」。看完之後，我要決定：${decision||"＿＿"}。\n`;
+  w+=`【資料】資料來自：${state.sources.map(v=>L("sources",v)).join("、")||"＿＿"}。儀表板只讀資料，不要改我的原始檔。\n`;
+  w+=`【更新】${refreshText()||"＿＿"}。\n`;
+  w+=`【誰看】${L("audience",state.audience[0])||"＿＿"}。${hosting()?"→ "+hosting()+"。":""}\n`;
+  w+=`【主儀表板】打開第一眼要看到：${main.join("、")||"＿＿"}。\n`;
+  if(state.paging[0]==="multi"&&pages.length)w+=`【分頁】${pages.map((p,i)=>`P${i+1}「${p.n}」（${p.c}）`).join("；")}。\n`;
+  else if(state.paging[0]==="one")w+="【分頁】一頁就好。\n";
+  w+=`【樣子】我想看到：${views.join("、")||"＿＿"}。變好跟變差兩個方向都要顯示（變差用紅色）。\n\n`;
+  w+="【做法】\n1. 開始前，先把你理解的結構畫給我看；有不清楚的地方一次問我一題，並附上你建議的答案。\n";
+  w+="2. 第一版先用範例資料做出畫面給我確認，我點頭了再接真的資料。\n";
+  w+=`3. 每做完一版附截圖給我看${state.audience[0]&&state.audience[0]!=="me"?"（手機寬度也要一張）":""}，不要只說完成。\n`;
+  if(state.sources.some(x=>["line","shot","db"].includes(x)))w+="4. 資料裡有個資，上網前一定要先加登入。\n";
+  $("wish").textContent=w;
+  try{localStorage.setItem("dw-state",JSON.stringify({state,decision,pages:[0,1,2,3].map(i=>[$("pn"+i).value,$("pc"+i).value])}));}catch(e){}
+}
+function copyFrom(srcId,msgId,okText){
+  const el=$(srcId),msg=$(msgId);
+  const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);msg.textContent="已幫你選取，按 ⌘C／Ctrl+C 複製";};
+  try{navigator.clipboard.writeText(el.textContent).then(()=>msg.textContent=okText,sel);}catch(e){sel();}
+}
+$("copy").onclick=()=>copyFrom("wish","copied","已複製，貼給 Claude 就可以開工");
+$("copyInstall").onclick=()=>copyFrom("install","copiedInstall","已複製，貼給 Claude");
+$("reset").onclick=()=>{Object.keys(state).forEach(k=>state[k]=[]);$("decision").value="";renderPages();renderChips();update();$("copied").textContent="";};
+$("decision").addEventListener("input",update);
+
+renderExamples();renderPages();
+try{const s=JSON.parse(localStorage.getItem("dw-state")||"null");
+  if(s){Object.assign(state,s.state);$("decision").value=s.decision||"";
+    (s.pages||[]).forEach(([n,c],i)=>{$("pn"+i).value=n;if(i>0)$("pc"+i).value=c;});}
+}catch(e){}
+renderChips();update();
+</script>
 </body></html>
