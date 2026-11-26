@@ -93,8 +93,10 @@ input[type=text],select{font:inherit;font-size:14px;padding:7px 10px;border:1px 
 <section>
   <h2>兩種方式，選一個</h2>
   <div class="two">
-    <div><span class="num">A</span><h3>在這頁直接點選</h3><p class="note">往下看完架構，在「九個問題」點一點，最下面會產出結構圖和許願句。按「複製許願句」，貼給 Claude 就能開工。</p><a class="btn" href="#questions">跳到九個問題</a></div>
-    <div><span class="num">B</span><h3>用 skill 一題一題聊</h3><p class="note">裝好 skill 後跟 Claude 說「我想做一個儀表板」，它一次問你一題、附建議答案，陪你把結構架起來。</p><a class="btn" href="https://github.com/Robbiechiu/dashboard-wish" target="_blank" rel="noopener">skill 在這裡（GitHub）</a></div>
+    <div><span class="num">A</span><h3>用 skill 一題一題聊</h3><p class="note">按下面的按鈕複製安裝句，貼給 Claude 就裝好。重開 Claude Code 後跟它說「我想做一個儀表板」，它一次問你一題、附建議答案，陪你把結構架起來。</p>
+      <div class="say" id="installTop">幫我安裝這個 skill：https://github.com/Robbiechiu/dashboard-wish ，裝到 ~/.claude/skills/dashboard-wish</div>
+      <div class="row"><button class="btn primary" id="copyInstallTop">複製安裝句</button><span class="copied" id="copiedInstallTop"></span></div></div>
+    <div><span class="num">B</span><h3>在這頁直接點選</h3><p class="note">往下看完架構，在「九個問題」點一點，最下面會產出結構圖和許願句。按「複製許願句」，貼給 Claude 就能開工。</p><a class="btn" href="#questions">跳到九個問題</a></div>
   </div>
 </section>
 
@@ -172,7 +174,7 @@ input[type=text],select{font:inherit;font-size:14px;padding:7px 10px;border:1px 
 </section>
 
 <section>
-  <h2>想一題一題聊：裝 skill</h2>
+  <h2>裝 skill（同 A 方案）</h2>
   <div class="out">
     <h3>① 跟 Claude 說這句（按鈕複製）</h3>
     <div class="say" id="install">幫我安裝這個 skill：https://github.com/Robbiechiu/dashboard-wish ，裝到 ~/.claude/skills/dashboard-wish</div>
@@ -341,6 +343,7 @@ function copyFrom(srcId,msgId,okText){
   try{navigator.clipboard.writeText(el.textContent).then(()=>msg.textContent=okText,sel);}catch(e){sel();}
 }
 $("copy").onclick=()=>copyFrom("wish","copied","已複製，貼給 Claude 就可以開工");
+$("copyInstallTop").onclick=()=>copyFrom("installTop","copiedInstallTop","已複製，貼給 Claude");
 $("copyInstall").onclick=()=>copyFrom("install","copiedInstall","已複製，貼給 Claude");
 $("reset").onclick=()=>{Object.keys(state).forEach(k=>state[k]=[]);$("decision").value="";renderPages();renderChips();update();$("copied").textContent="";};
 $("decision").addEventListener("input",update);
