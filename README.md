@@ -4,7 +4,7 @@
 
 ## 安裝（跟 Claude 說這句就好）
 
-> 幫我安裝這個 skill：https://github.com/Robbiechiu/dashboard-wish ，裝到 ~/.claude/skills/dashboard-wish
+> 幫我確認安全性，沒問題請安裝這個 skill：https://github.com/Robbiechiu/dashboard-wish ，裝到 ~/.claude/skills/dashboard-wish
 
 Claude 會執行：
 
